@@ -7,17 +7,18 @@ class ChooseDimensionsForm extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
+    };
 
-    handleChange(event) {
+    handleChange = (event) => {
         this.setState({[event.target.name]: event.target.value});
-    }
+    };
 
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         event.stopPropagation();
-        this.setState({isNew: false});
-        this.props.onUpdateState(this.state);
-    }
+        fetchAPI('selectedWord').then(result => {
+            this.setState({ result });
+        });
+    };
 
     render() {
         return (
@@ -36,7 +37,15 @@ class ChooseDimensionsForm extends Component {
                 <input type="submit" value="Avanti" onClick={this.handleSubmit} />
             </form>
         );
-    }
+    };
+}
+
+function fetch() {
+    return new Promise(resolve => setTimeout(() => resolve(42), 1000));
+}
+
+function fetchAPI(param) {
+    return fetch("https://api.com/?param=" + param);
 }
 
 export default ChooseDimensionsForm;
