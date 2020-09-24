@@ -8,7 +8,7 @@ class Crossword:
         self.schema = crossword_structure.copy()
         for y in range(self.width):
             for x in range(self.height):
-                self.schema[x][y] = True if (crossword_structure[x][y] == '_') else False
+                self.schema[x][y] = (crossword_structure[x][y] == 0)
 
         wf = open(words_file, 'r')
         self.words = set(wf.read().upper().splitlines())

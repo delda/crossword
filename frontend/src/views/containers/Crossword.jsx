@@ -1,5 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import ReactDom from 'react-dom';
 import CrosswordCell from "./CrosswordCell";
+import axios from 'axios';
+import request from 'request';
 
 class Crossword extends Component {
     constructor(props) {
@@ -19,17 +22,48 @@ class Crossword extends Component {
 
         for (let x = 1; x <= this.state.width; x++) {
             for (let y = 1; y <= this.state.height; y++) {
-                table.push(<CrosswordCell x={x} y={y} blank={false} />);
+                table.push(<CrosswordCell x={x} y={y} blank={false} val={x} />);
             }
         }
         return table;
     }
 
-    handleSubmit(event) {
-        event.stopPropagation();
+    updateTable = (data) => {
+        let element;
+        console.log(data.response);
+        for (let x = 1; x <= this.state.width; x++) {
+            for (let y = 1; y <= this.state.height; y++) {
+                console.log('w'+x+'_y'+y);
+                console.log(data.response[x-1][y-1]);
+                document.getElementById('w'+x+'_y'+y).value = data.response[x-1][y-1];
+            }
+        }
     }
 
-    render() {
+    fetchAPI = (params) => {
+        const apiUrl = 'http://127.0.0.1/generate_crossword?data=' + params.data;
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then((data) => this.updateTable(data));
+    };
+
+    handleSubmit = (event) => {
+        event.stopPropagation();
+        var crossword = Array.from(Array(parseInt(this.state.width)), () => new Array(parseInt(this.state.height)));
+
+        let element;
+        for (let x = 1; x <= this.state.width; x++) {
+            for (let y = 1; y <= this.state.height; y++) {
+                element = document.getElementById('w'+x+'_y'+y);
+                crossword[x-1][y-1] = element.classList.contains('crossword-board__item--blank')
+                    ? 1
+                    : 0;
+            }
+        }
+        let result = this.fetchAPI({'data': JSON.stringify(crossword)});
+    }
+
+    render = () => {
         if (this.props.isNew) {
             return '';
         }
@@ -49,8 +83,10 @@ class Crossword extends Component {
                     </div>
                 </div>
             </div>
-            <input type="submit" value="Avanti" onClick={this.handleSubmit} />
+            <input type="submit" value="Avanti" onClick={this.handleSubmit.bind(this)} />
         </>);
     }
 }
+
+
 export default Crossword;

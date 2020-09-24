@@ -15,9 +15,8 @@ class ChooseDimensionsForm extends Component {
 
     handleSubmit = (event) => {
         event.stopPropagation();
-        fetchAPI('selectedWord').then(result => {
-            this.setState({ result });
-        });
+        this.setState({isNew: false});
+        this.props.onUpdateState(this.state);
     };
 
     render() {
@@ -38,14 +37,6 @@ class ChooseDimensionsForm extends Component {
             </form>
         );
     };
-}
-
-function fetch() {
-    return new Promise(resolve => setTimeout(() => resolve(42), 1000));
-}
-
-function fetchAPI(param) {
-    return fetch("https://api.com/?param=" + param);
 }
 
 export default ChooseDimensionsForm;

@@ -12,10 +12,9 @@ import json
 @csrf_exempt
 def generate_crossword(request):
     response = {"error": "Method Not Allowed!"}
-    if request.method != 'POST':
+    if request.method != 'GET':
         return JsonResponse(response, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    data = request.POST.get('data', False)
-
+    data = request.GET.get('data')
     if not data:
         response = {"error": "Invalid value!"}
         return JsonResponse(response, status=status.HTTP_405_METHOD_NOT_ALLOWED)
