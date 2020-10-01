@@ -67,6 +67,7 @@ class GenerateCrossword:
             var = set(t.word for t in Dictionary.objects.filter(word_lenght=definition.length).order_by('?')[:100])
             self.domains.append(var)
 
+    # se non c'è alcuna parola che soddisfi la/le contraint, la elimino dal dominio
     def revise(self, x: Definition, y: Definition) -> bool:
         revised = False
         (x_idx_step, y_idx_step) = self.get_overlap_step(x, y)

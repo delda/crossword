@@ -66,21 +66,21 @@ class Crossword:
         maps = []
         for definition in definitions:
             maps.append(definition.get_map(self.width, self.height))
-
         overlaps = []
-        for i in range(len(maps)):
+        for i in range(len(maps)-1):
             for j in range(i+1, len(maps)):
-                if [x for x in maps[i] if x in maps[j]]:
-                    overlaps.append((i, j))
-
+                cross = [x for x in maps[i] if x in maps[j]]
+                for idx in cross:
+                    overlaps.append((int(idx / self.width), idx % self.width))
         return overlaps
 
-    def neighborhood(self, definition: Definition) -> list:
+    def neighborhood(self, base_definition: Definition) -> list:
         neighbors = []
-        for overlap in self.overlaps:
-            if definition == self.definitions[overlap[0]]:
-                neighbors.append(self.definitions[overlap[1]])
-            if definition == self.definitions[overlap[1]]:
-                neighbors.append(self.definitions[overlap[0]])
-
+        map_x = base_definition.get_map(self.width, self.height)
+        for definition in self.definitions:
+            map_y = definition.get_map(self.width, self.height)
+            if base_definition != definition:
+                cross = [x for x in map_x if x in map_y]
+                if cross:
+                    neighbors.append(definition)
         return neighbors
